@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Collections.Specialized/Collections.Specialized.csproj" />
+  <Project Path="DigitPrefixLookupTest/DigitPrefixLookupTest.csproj" />
+</Solution>
