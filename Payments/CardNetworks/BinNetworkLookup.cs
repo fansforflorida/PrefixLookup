@@ -7,12 +7,17 @@ using Collections.Specialized;
 /// </summary>
 public sealed class BinNetworkLookup
 {
+    /// <summary>
+    /// Gets the singleton instance of <see cref="BinNetworkLookup"/>.
+    /// </summary>
+    public static readonly BinNetworkLookup Instance = new ();
+
     private readonly DigitPrefixLookup<IssuingNetwork> lookup = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BinNetworkLookup"/> class.
     /// </summary>
-    public BinNetworkLookup()
+    private BinNetworkLookup()
     {
         this.LoadVisa();
         this.LoadMasterCard();

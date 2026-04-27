@@ -5,7 +5,7 @@ using Payments.CardNetworks;
 
 public class BinNetworkLookupTests
 {
-    private readonly BinNetworkLookup sut = new();
+    private readonly BinNetworkLookup sut = BinNetworkLookup.Instance;
 
     [Theory]
     [InlineData(null)]

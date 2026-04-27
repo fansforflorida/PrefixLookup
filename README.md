@@ -59,7 +59,7 @@ Console.WriteLine(lookup.Count);      // number of registered prefixes
 The `Payments` library provides a ready-to-use `BinNetworkLookup` that wraps `DigitPrefixLookup` with all major network BIN ranges pre-loaded.
 
 ```csharp
-var lookup = new BinNetworkLookup();
+var lookup = BinNetworkLookup.Instance;
 
 if (lookup.TryGetNetwork("4111111111111111", out IssuingNetwork network))
     Console.WriteLine(network);   // Visa
