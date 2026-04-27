@@ -4,7 +4,7 @@ A trie-based lookup that maps digit-only prefixes to values, housed in the `Coll
 
 ## Overview
 
-`DigitPrefixLookup<TValue>` stores prefix/value pairs where each key is a string of decimal digits. A lookup walk stops at the first matching prefix, so shorter prefixes take priority over longer ones that share the same leading digits.
+`DigitPrefixLookup<TValue>` stores prefix/value pairs where each key is a string of decimal digits. A lookup walk returns the value for the longest matching prefix, so more-specific (longer) prefixes take priority over shorter ones that share the same leading digits.
 
 A common use case is identifying a payment card issuer from its **Bank Identification Number (BIN)**, the leading 6–8 digits of a card number. For example, the BINs `51`–`55` all map to MasterCard, so a card number beginning with `521853` is identified as MasterCard via the `52` prefix.
 
@@ -16,9 +16,7 @@ A common use case is identifying a payment card issuer from its **Bank Identific
 | Discover   | `6011`, `622126`–`622925`, `644`–`649`, `65` |
 | Diners     | `300`–`305`, `36`, `38`, `39`                |
 | JCB        | `3528`–`3589`                                |
-| UnionPay   | `62`                                         |
-
-> **Note:** The Discover `622126`–`622925` range overlaps with the UnionPay `62` prefix. Because the trie stops at the first (shortest) matching prefix, those BINs resolve to UnionPay in practice.
+| UnionPay   | `62` (excluding the Discover sub-range)      |
 
 ## API
 
@@ -30,7 +28,7 @@ lookup.Add("51", "MasterCard");
 lookup.Add("52", "MasterCard");
 lookup.TryAdd("4",  "Visa");          // returns false if prefix already exists
 
-// Look up by any card number (match stops at the first registered prefix)
+// Look up by any card number (returns the longest matching registered prefix)
 if (lookup.TryGetValue("521853", out var issuer))
     Console.WriteLine(issuer);        // MasterCard
 
@@ -54,7 +52,7 @@ Console.WriteLine(lookup.Count);      // number of registered prefixes
 - Prefixes must contain only ASCII digits (`0`–`9`); non-digit input throws `ArgumentException`.
 - Adding a duplicate prefix throws `ArgumentException` (`Add`) or returns `false` (`TryAdd`).
 - Reading a missing prefix throws `PrefixNotFoundException` (indexer) or returns `false` (`TryGetValue`).
-- Lookup is **prefix-first**: given a card number `521853` and a registered prefix `52`, the value is returned after consuming just the first two digits.
+- Lookup is **longest-match**: given a card number `6221260000000000` and registered prefixes `62` and `622126`, the value for the longer prefix `622126` is returned.
 
 ## BinNetworkLookup
 

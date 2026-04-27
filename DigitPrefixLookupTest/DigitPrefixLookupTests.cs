@@ -147,6 +147,34 @@ public class DigitPrefixLookupTests
     }
 
     [Fact]
+    public void TryGetValue_OverlappingPrefixes_ReturnsLongestMatch()
+    {
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "62", "UnionPay" },
+            { "622126", "Discover" },
+        };
+
+        var result = lookup.TryGetValue("6221260000000000", out var value);
+        result.Should().BeTrue();
+        value.Should().Be("Discover");
+    }
+
+    [Fact]
+    public void TryGetValue_OverlappingPrefixes_WhenOnlyShortPrefixMatches_ReturnsShortMatch()
+    {
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "62", "UnionPay" },
+            { "622126", "Discover" },
+        };
+
+        var result = lookup.TryGetValue("6250000000000000", out var value);
+        result.Should().BeTrue();
+        value.Should().Be("UnionPay");
+    }
+
+    [Fact]
     public void Indexer_Set_AddsPrefix()
     {
         DigitPrefixLookup<string> lookup = new()

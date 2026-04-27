@@ -92,6 +92,8 @@ public class DigitPrefixLookup<TValue> : IPrefixLookup<string, TValue>
         ArgumentNullException.ThrowIfNull(prefix);
 
         Node node = this.root;
+        TValue lastMatch = default!;
+        bool found = false;
 
         foreach (char c in prefix)
         {
@@ -99,21 +101,20 @@ public class DigitPrefixLookup<TValue> : IPrefixLookup<string, TValue>
 
             if (i < 0 || i > 9 || node.Children[i] == null)
             {
-                value = default!;
-                return false;
+                break;
             }
 
             node = node.Children[i]!;
 
             if (node.HasValue)
             {
-                value = node.Value;
-                return true;
+                lastMatch = node.Value;
+                found = true;
             }
         }
 
-        value = default!;
-        return false;
+        value = lastMatch;
+        return found;
     }
 
     /// <inheritdoc/>

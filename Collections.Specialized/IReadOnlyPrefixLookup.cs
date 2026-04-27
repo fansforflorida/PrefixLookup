@@ -29,11 +29,11 @@ public interface IReadOnlyPrefixLookup<TKey, TValue> : IReadOnlyCollection<KeyVa
     TValue this[TKey prefix] { get; }
 
     /// <summary>
-    /// Attempts to get the value associated with the specified prefix.
+    /// Attempts to get the value associated with the longest registered prefix that matches the start of <paramref name="prefix"/>.
     /// </summary>
-    /// <param name="prefix">The prefix to look up.</param>
-    /// <param name="value">When this method returns, contains the value associated with the specified prefix, if the prefix is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
-    /// <returns><see langword="true"/> if the prefix was found; otherwise, <see langword="false"/>.</returns>
+    /// <param name="prefix">The key to look up. The method scans this value from left to right and returns the value for the longest registered prefix found.</param>
+    /// <param name="value">When this method returns, contains the value associated with the longest matching prefix, if one is found; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
+    /// <returns><see langword="true"/> if a matching prefix was found; otherwise, <see langword="false"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="prefix"/> is <see langword="null"/>.</exception>
     bool TryGetValue(TKey prefix, out TValue value);
 }

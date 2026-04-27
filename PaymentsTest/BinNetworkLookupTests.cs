@@ -83,11 +83,11 @@ public class BinNetworkLookupTests
         network.Should().Be(IssuingNetwork.AmericanExpress);
     }
 
-    // Discover: 6011, 65, 644-649
-    // Note: the Discover 622126-622925 range overlaps with the UnionPay "62" prefix.
-    // The trie returns the shortest matching prefix, so those BINs resolve to UnionPay.
+    // Discover: 6011, 622126-622925, 644-649, 65
     [Theory]
     [InlineData("6011000000000000")]
+    [InlineData("6221260000000000")]
+    [InlineData("6229250000000000")]
     [InlineData("6500000000000000")]
     [InlineData("650")]
     [InlineData("644")]
@@ -140,12 +140,10 @@ public class BinNetworkLookupTests
         network.Should().Be(IssuingNetwork.Jcb);
     }
 
-    // UnionPay: 62
+    // UnionPay: 62 (excluding the Discover sub-range 622126-622925)
     [Theory]
     [InlineData("6200000000000000")]
     [InlineData("6250000000000000")]
-    [InlineData("622126")]
-    [InlineData("622925")]
     public void TryGetNetwork_WithUnionPayBin_ReturnsUnionPay(string bin)
     {
         var result = sut.TryGetNetwork(bin, out var network);
