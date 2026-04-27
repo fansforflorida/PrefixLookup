@@ -14,8 +14,11 @@ A common use case is identifying a payment card issuer from its **Bank Identific
 | MasterCard | `51`–`55`, `2221`–`2720`                     |
 | Amex       | `34`, `37`                                   |
 | Discover   | `6011`, `622126`–`622925`, `644`–`649`, `65` |
-| Diners     | `300`–`305`, `36`, `38`                      |
+| Diners     | `300`–`305`, `36`, `38`, `39`                |
 | JCB        | `3528`–`3589`                                |
+| UnionPay   | `62`                                         |
+
+> **Note:** The Discover `622126`–`622925` range overlaps with the UnionPay `62` prefix. Because the trie stops at the first (shortest) matching prefix, those BINs resolve to UnionPay in practice.
 
 ## API
 
@@ -53,16 +56,35 @@ Console.WriteLine(lookup.Count);      // number of registered prefixes
 - Reading a missing prefix throws `PrefixNotFoundException` (indexer) or returns `false` (`TryGetValue`).
 - Lookup is **prefix-first**: given a card number `521853` and a registered prefix `52`, the value is returned after consuming just the first two digits.
 
+## BinNetworkLookup
+
+The `Payments` library provides a ready-to-use `BinNetworkLookup` that wraps `DigitPrefixLookup` with all major network BIN ranges pre-loaded.
+
+```csharp
+var lookup = new BinNetworkLookup();
+
+if (lookup.TryGetNetwork("4111111111111111", out IssuingNetwork network))
+    Console.WriteLine(network);   // Visa
+```
+
+`TryGetNetwork` accepts any string of digits (a full card number works; only the leading digits matter) and returns the matched `IssuingNetwork` enum value, or `IssuingNetwork.Unknown` if no prefix matches.
+
 ## Project structure
 
 ```text
-Collections.Specialized/      # library (net10.0)
+Collections.Specialized/      # trie library (net10.0)
   DigitPrefixLookup.cs        # trie implementation
   IPrefixLookup.cs            # read/write interface
   IReadOnlyPrefixLookup.cs    # read-only view interface
   PrefixNotFoundException.cs  # exception for missing prefixes
 
-DigitPrefixLookupTest/        # xUnit test suite (net10.0, FluentAssertions)
+Payments/                     # card-network library (net10.0)
+  CardNetworks/
+    BinNetworkLookup.cs       # pre-loaded BIN → IssuingNetwork lookup
+    IssuingNetwork.cs         # enum of supported card networks
+
+DigitPrefixLookupTest/        # xUnit tests for the trie (net10.0, FluentAssertions)
+PaymentsTest/                 # xUnit tests for BinNetworkLookup (net10.0, FluentAssertions)
 ```
 
 ## Further reading
