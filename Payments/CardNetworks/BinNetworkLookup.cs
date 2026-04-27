@@ -7,15 +7,13 @@ using Collections.Specialized;
 /// </summary>
 public sealed class BinNetworkLookup
 {
-    private readonly IPrefixLookup<string, IssuingNetwork> lookup;
+    private readonly DigitPrefixLookup<IssuingNetwork> lookup = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BinNetworkLookup"/> class.
     /// </summary>
     public BinNetworkLookup()
     {
-        this.lookup = new DigitPrefixLookup<IssuingNetwork>();
-
         this.LoadVisa();
         this.LoadMasterCard();
         this.LoadAmericanExpress();
