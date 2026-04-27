@@ -6,7 +6,7 @@ A trie-based lookup that maps digit-only prefixes to values, housed in the `Coll
 
 `DigitPrefixLookup<TValue>` stores prefix/value pairs where each key is a string of decimal digits. A lookup walk stops at the first matching prefix, so shorter prefixes take priority over longer ones that share the same leading digits.
 
-A common use case is identifying a payment card issuer from its **Bank Identification Number (BIN)** — the leading 6–8 digits of a card number. For example, the BINs `51`–`55` all map to MasterCard, so a card number beginning with `521853` is identified as MasterCard via the `52` prefix.
+A common use case is identifying a payment card issuer from its **Bank Identification Number (BIN)**, the leading 6–8 digits of a card number. For example, the BINs `51`–`55` all map to MasterCard, so a card number beginning with `521853` is identified as MasterCard via the `52` prefix.
 
 | Issuer     | BIN prefix(es)                               |
 |------------|----------------------------------------------|
@@ -27,18 +27,24 @@ lookup.Add("51", "MasterCard");
 lookup.Add("52", "MasterCard");
 lookup.TryAdd("4",  "Visa");          // returns false if prefix already exists
 
-// Look up by any card number — match stops at the first registered prefix
+// Look up by any card number (match stops at the first registered prefix)
 if (lookup.TryGetValue("521853", out var issuer))
     Console.WriteLine(issuer);        // MasterCard
 
 // Indexer throws PrefixNotFoundException on miss
 string brand = lookup["4111111111111111"];
 
-// Read-only view
-IReadOnlyPrefixLookup<IEnumerable<char>, string> ro = lookup.AsReadOnly();
+// Restrict to a read-only view (direct assignment, no wrapper needed)
+IReadOnlyPrefixLookup<string, string> ro = lookup;
 
 Console.WriteLine(lookup.Count);      // number of registered prefixes
 ```
+
+### Interface hierarchy
+
+`IPrefixLookup<TKey, TValue>` extends `IReadOnlyPrefixLookup<TKey, TValue>`, which in turn extends `IReadOnlyCollection<KeyValuePair<TKey, TValue>>`. This means any `DigitPrefixLookup<TValue>` can be assigned directly to `IReadOnlyPrefixLookup` without a wrapper.
+
+`IReadOnlyPrefixLookup` represents a **read-only view through that reference**. It does not guarantee that the underlying collection is immutable. Code holding an `IPrefixLookup` reference to the same instance may still add entries. This mirrors the convention used in the .NET BCL (e.g. `List<T>` implements `IReadOnlyList<T>`, yet the list itself remains mutable).
 
 ### Key behaviours
 
@@ -53,8 +59,7 @@ Console.WriteLine(lookup.Count);      // number of registered prefixes
 Collections.Specialized/      # library (net10.0)
   DigitPrefixLookup.cs        # trie implementation
   IPrefixLookup.cs            # read/write interface
-  IReadOnlyPrefixLookup.cs    # read-only interface
-  ReadOnlyPrefixLookup.cs     # read-only decorator
+  IReadOnlyPrefixLookup.cs    # read-only view interface
   PrefixNotFoundException.cs  # exception for missing prefixes
 
 DigitPrefixLookupTest/        # xUnit test suite (net10.0, FluentAssertions)

@@ -8,7 +8,7 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Count_EmptyLookup_IsZero()
     {
-        DigitPrefixLookup<string> lookup = new();
+        DigitPrefixLookup<string> lookup = [];
 
         lookup.Count.Should().Be(0);
     }
@@ -16,8 +16,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Count_AfterOneAdd_IsOne()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         lookup.Count.Should().Be(1);
     }
@@ -25,8 +27,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void TryGetValue_WithExistingPrefix_ReturnsTrue()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         var result = lookup.TryGetValue("52", out var value);
         result.Should().BeTrue();
@@ -36,8 +40,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void TryAdd_DuplicatePrefix_ReturnsFalse()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         var result = lookup.TryAdd("52", "MasterCard2");
         result.Should().BeFalse();
@@ -46,8 +52,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Add_DuplicatePrefix_ThrowsArgumentException()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         lookup.Invoking(l => l.Add("52", "MasterCard2"))
             .Should().Throw<ArgumentException>();
@@ -56,7 +64,7 @@ public class DigitPrefixLookupTests
     [Fact]
     public void TryAdd_NullPrefix_ThrowsArgumentNullException()
     {
-        DigitPrefixLookup<string> lookup = new();
+        DigitPrefixLookup<string> lookup = [];
 
         lookup.Invoking(l => l.TryAdd(null!, "MasterCard"))
             .Should().Throw<ArgumentNullException>();
@@ -65,7 +73,7 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Add_NullPrefix_ThrowsArgumentNullException()
     {
-        DigitPrefixLookup<string> lookup = new();
+        DigitPrefixLookup<string> lookup = [];
 
         lookup.Invoking(l => l.Add(null!, "MasterCard"))
             .Should().Throw<ArgumentNullException>();
@@ -74,7 +82,7 @@ public class DigitPrefixLookupTests
     [Fact]
     public void TryAdd_NonDigitPrefix_ThrowsArgumentException()
     {
-        DigitPrefixLookup<string> lookup = new();
+        DigitPrefixLookup<string> lookup = [];
 
         lookup.Invoking(l => l.TryAdd("5A", "MasterCard"))
             .Should().Throw<ArgumentException>();
@@ -83,7 +91,7 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Add_NonDigitPrefix_ThrowsArgumentException()
     {
-        DigitPrefixLookup<string> lookup = new();
+        DigitPrefixLookup<string> lookup = [];
 
         lookup.Invoking(l => l.Add("5A", "MasterCard"))
             .Should().Throw<ArgumentException>();
@@ -92,8 +100,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void TryGetValue_PrefixNotFound_ReturnsFalse()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         var result = lookup.TryGetValue("99", out _);
         result.Should().BeFalse();
@@ -102,8 +112,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void TryGetValue_InputStartsWithRegisteredPrefix_ReturnsTrueWithValue()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         var result = lookup.TryGetValue("521853", out var value);
         result.Should().BeTrue();
@@ -113,8 +125,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void TryGetValue_NonDigitPrefix_ReturnsFalse()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         var result = lookup.TryGetValue("5A", out _);
         result.Should().BeFalse();
@@ -123,8 +137,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void TryGetValue_ShorterPrefixThanRegistered_ReturnsFalse()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         var result = lookup.TryGetValue("5", out _);
         result.Should().BeFalse();
@@ -133,9 +149,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Indexer_Set_AddsPrefix()
     {
-        DigitPrefixLookup<string> lookup = new();
-
-        lookup["52"] = "MasterCard";
+        DigitPrefixLookup<string> lookup = new()
+        {
+            ["52"] = "MasterCard"
+        };
 
         lookup.Count.Should().Be(1);
         lookup["52"].Should().Be("MasterCard");
@@ -144,8 +161,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Indexer_Get_WithExistingPrefix_ReturnsValue()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         var value = lookup["52"];
         value.Should().Be("MasterCard");
@@ -154,8 +173,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Indexer_Get_WithNonexistentPrefix_ThrowsPrefixNotFoundException()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "52", "MasterCard" }
+        };
 
         lookup.Invoking(l => _ = l["99"])
             .Should().Throw<PrefixNotFoundException>();
@@ -164,8 +185,10 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Indexer_Set_WithDuplicatePrefix_ThrowsArgumentException()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup["52"] = "MasterCard";
+        DigitPrefixLookup<string> lookup = new()
+        {
+            ["52"] = "MasterCard"
+        };
 
         lookup.Invoking(l => l["52"] = "MasterCard2")
             .Should().Throw<ArgumentException>();
@@ -174,132 +197,73 @@ public class DigitPrefixLookupTests
     [Fact]
     public void Indexer_Get_WithInputStartingWithRegisteredPrefix_ReturnsValue()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup["52"] = "MasterCard";
+        DigitPrefixLookup<string> lookup = new()
+        {
+            ["52"] = "MasterCard"
+        };
 
         var value = lookup["521853"];
         value.Should().Be("MasterCard");
     }
 
     [Fact]
-    public void AsReadOnly_ReturnsIReadOnlyPrefixLookup()
+    public void GetEnumerator_WithMultiplePrefixes_ReturnsInSortedOrder()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "51", "MasterCard" },
+            { "4", "Visa" },
+            { "34", "Amex" },
+            { "6011", "Discover" },
+            { "2221", "MasterCard" },
+        };
 
-        var readOnly = lookup.AsReadOnly();
-        readOnly.Should().BeAssignableTo<IReadOnlyPrefixLookup<IEnumerable<char>, string>>();
+        var result = lookup
+            .Select(kvp => new { kvp.Key, kvp.Value })
+            .ToList();
+
+        result.Should().BeEquivalentTo(
+            [
+                new { Key ="2221", Value = "MasterCard" },
+                new { Key ="34",   Value = "Amex" },
+                new { Key ="4",    Value = "Visa" },
+                new { Key ="51",   Value = "MasterCard" },
+                new { Key ="6011", Value = "Discover" },
+            ],
+            options => options.WithStrictOrdering());
     }
 
     [Fact]
-    public void AsReadOnly_Count_ReflectsOriginalLookupCount()
+    public void Keys_WithMultiplePrefixes_ReturnsInSortedOrder()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
-        lookup.Add("4", "Visa");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "51", "MasterCard" },
+            { "4", "Visa" },
+            { "34", "Amex" },
+            { "6011", "Discover" },
+            { "2221", "MasterCard" },
+        };
 
-        var readOnly = lookup.AsReadOnly();
-        readOnly.Count.Should().Be(2);
+        string[] expected = ["2221", "34", "4", "51", "6011"];
+
+        lookup.Keys.Should().Equal(expected);
     }
 
     [Fact]
-    public void AsReadOnly_TryGetValue_WithExistingPrefix_ReturnsTrue()
+    public void Values_WithMultiplePrefixes_ReturnsInSortedOrder()
     {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
+        DigitPrefixLookup<string> lookup = new()
+        {
+            { "51", "MasterCard" },
+            { "4", "Visa" },
+            { "34", "Amex" },
+            { "6011", "Discover" },
+            { "2221", "MasterCard" },
+        };
 
-        var readOnly = lookup.AsReadOnly();
-        var result = readOnly.TryGetValue("52", out var value);
+        var values = lookup.Values.ToList();
 
-        result.Should().BeTrue();
-        value.Should().Be("MasterCard");
-    }
-
-    [Fact]
-    public void AsReadOnly_TryGetValue_WithNonexistentPrefix_ReturnsFalse()
-    {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
-
-        var readOnly = lookup.AsReadOnly();
-        var result = readOnly.TryGetValue("99", out _);
-
-        result.Should().BeFalse();
-    }
-
-    [Fact]
-    public void AsReadOnly_TryGetValue_WithInputStartingWithRegisteredPrefix_ReturnsTrueWithValue()
-    {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
-
-        var readOnly = lookup.AsReadOnly();
-        var result = readOnly.TryGetValue("521853", out var value);
-
-        result.Should().BeTrue();
-        value.Should().Be("MasterCard");
-    }
-
-    [Fact]
-    public void AsReadOnly_Indexer_Get_WithExistingPrefix_ReturnsValue()
-    {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
-
-        var readOnly = lookup.AsReadOnly();
-        var value = readOnly["52"];
-
-        value.Should().Be("MasterCard");
-    }
-
-    [Fact]
-    public void AsReadOnly_Indexer_Get_WithNonexistentPrefix_ThrowsPrefixNotFoundException()
-    {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
-
-        var readOnly = lookup.AsReadOnly();
-        readOnly.Invoking(r => _ = r["99"])
-            .Should().Throw<PrefixNotFoundException>();
-    }
-
-    [Fact]
-    public void AsReadOnly_Indexer_Get_WithInputStartingWithRegisteredPrefix_ReturnsValue()
-    {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
-
-        var readOnly = lookup.AsReadOnly();
-        var value = readOnly["521853"];
-
-        value.Should().Be("MasterCard");
-    }
-
-    [Fact]
-    public void AsReadOnly_ReflectsChangesToOriginalLookup()
-    {
-        DigitPrefixLookup<string> lookup = new();
-        lookup.Add("52", "MasterCard");
-
-        var readOnly = lookup.AsReadOnly();
-        readOnly.Count.Should().Be(1);
-
-        lookup.Add("4", "Visa");
-
-        readOnly.Count.Should().Be(2);
-        var result = readOnly.TryGetValue("4", out var value);
-        result.Should().BeTrue();
-        value.Should().Be("Visa");
-    }
-
-    [Fact]
-    public void AsReadOnly_MultipleCallsReturnDifferentInstances()
-    {
-        DigitPrefixLookup<string> lookup = new();
-
-        var readOnly1 = lookup.AsReadOnly();
-        var readOnly2 = lookup.AsReadOnly();
-
-        readOnly1.Should().NotBeSameAs(readOnly2);
+        values.Should().ContainInOrder("MasterCard", "Amex", "Visa", "MasterCard", "Discover");
     }
 }
