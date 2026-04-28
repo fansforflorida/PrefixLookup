@@ -1,4 +1,4 @@
-# DigitPrefixLookup
+# PrefixLookup
 
 A trie-based lookup that maps digit-only prefixes to values, housed in the `Collections.Specialized` namespace.
 
@@ -70,19 +70,22 @@ if (lookup.TryGetNetwork("4111111111111111", out IssuingNetwork network))
 ## Project structure
 
 ```text
-Collections.Specialized/      # trie library (net10.0)
-  DigitPrefixLookup.cs        # trie implementation
-  IPrefixLookup.cs            # read/write interface
-  IReadOnlyPrefixLookup.cs    # read-only view interface
-  PrefixNotFoundException.cs  # exception for missing prefixes
+src/
+  Collections.Specialized/    # trie library (net10.0)
+    DigitPrefixLookup.cs      # trie implementation
+    IPrefixLookup.cs          # read/write interface
+    IReadOnlyPrefixLookup.cs  # read-only view interface
+    PrefixNotFoundException.cs # exception for missing prefixes
 
-Payments/                     # card-network library (net10.0)
-  CardNetworks/
-    BinNetworkLookup.cs       # pre-loaded BIN → IssuingNetwork lookup
-    IssuingNetwork.cs         # enum of supported card networks
+  Payments/                   # card-network library (net10.0)
+    CardNetworks/
+      BinNetworkLookup.cs     # pre-loaded BIN → IssuingNetwork lookup
+      IssuingNetwork.cs       # enum of supported card networks
 
-DigitPrefixLookupTest/        # xUnit tests for the trie (net10.0, FluentAssertions)
-PaymentsTest/                 # xUnit tests for BinNetworkLookup (net10.0, FluentAssertions)
+tests/
+  PrefixLookup.Tests/         # xUnit tests (net10.0, FluentAssertions)
+    Collections.Specialized/  # tests for the trie library
+    Payments/                 # tests for BinNetworkLookup
 ```
 
 ## Further reading

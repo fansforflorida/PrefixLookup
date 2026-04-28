@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/Collections.Specialized/Collections.Specialized.csproj" />
+  <Project Path="src/Payments/Payments.csproj" />
+  <Project Path="tests/PrefixLookup.Tests/PrefixLookup.Tests.csproj" />
+</Solution>
