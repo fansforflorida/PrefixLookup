@@ -7,4 +7,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1633:File should have header", Justification = "Ignored", Scope = "namespace", Target = "~N:Payments.CardNetworks")]
+[assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1633:File should have header", Justification = "Ignored", Scope = "namespace", Target = "~N:Payments.CardValidation")]
+[assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1633:File should have header", Justification = "Ignored", Scope = "namespace", Target = "~N:Payments")]
 [assembly: SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1010:Opening square brackets should be spaced correctly", Justification = "VSCode always removes the space", Scope = "member", Target = "~F:Payments.CardNetworks.BinNetworkLookup.lookup")]
