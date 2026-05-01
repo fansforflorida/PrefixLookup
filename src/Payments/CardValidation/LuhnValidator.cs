@@ -1,21 +1,21 @@
 namespace Payments.CardValidation;
 
 /// <summary>
-/// Validates a Primary Account Number (PAN) using the Luhn algorithm.
+/// Validates a card number digit sequence using the Luhn algorithm.
 /// </summary>
 public static class LuhnValidator
 {
     /// <summary>
     /// Determines whether the given digit sequence passes the Luhn check.
     /// </summary>
-    /// <param name="pan">The digit sequence to validate.</param>
+    /// <param name="value">The digit sequence to validate.</param>
     /// <returns>
     /// <see langword="true"/> if the sequence is non-empty, contains only digits,
     /// and the Luhn checksum is divisible by 10; otherwise <see langword="false"/>.
     /// </returns>
-    public static bool IsValid(ReadOnlySpan<char> pan)
+    public static bool IsValid(ReadOnlySpan<char> value)
     {
-        if (pan.IsEmpty)
+        if (value.IsEmpty)
         {
             return false;
         }
@@ -23,9 +23,9 @@ public static class LuhnValidator
         int sum = 0;
         bool doubleDigit = false;
 
-        for (int i = pan.Length - 1; i >= 0; i--)
+        for (int i = value.Length - 1; i >= 0; i--)
         {
-            char c = pan[i];
+            char c = value[i];
 
             if (c is < '0' or > '9')
             {
